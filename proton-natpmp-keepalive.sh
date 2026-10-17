@@ -48,6 +48,9 @@ fi
 while true; do
 	echo "$outputDivider"
 	#### initialize variables for this loop iteration
+	natpmpcAllowed=''
+	natpmpc_udp_output=''
+	natpmpc_tcp_output=''
 	curlPublicIp=''
 	natPmpPublicIp=''
 	testNatPmpAllowed=''
@@ -55,9 +58,6 @@ while true; do
 	mappedUdpPort=''
 	testTcpPortMap=''
 	mappedTcpPort=''
-	echo '' > /tmp/natpmpc_allowed
-	echo '' > /tmp/natpmpc_udp_output
-	echo '' > /tmp/natpmpc_tcp_output
 	scriptWaitTime=45
 	
 	#### get public IP from curl to Proton operated ip.me
@@ -65,7 +65,7 @@ while true; do
 	then
 		# this should always match what natpmp returns
 		# should only be different if we're not connected to VPN
-		curlPublicIp=$(curl --silent ip.me)
+		curlPublicIp="$(curl --silent ip.me)"
 		echo "Public IP (ip.me): $curlPublicIp"
 	fi
 	#### test if the gateway allows port forwarding
@@ -77,10 +77,10 @@ while true; do
 		echo 'Testing if the gateway allows port forwarding...'
 	fi
 	# test if this server allows port forwarding
-	natpmpc -g "$protonGwIp" &> /tmp/natpmpc_allowed
+	natpmpcAllowed="$(natpmpc -g "$protonGwIp" 2>&1)"
 	# grab the read response/retry lines
-	testNatPmpAllowed=$(grep -E "$readNatPmpRespSuccessRegex" /tmp/natpmpc_allowed)
-	natPmpPublicIp=$(grep "$readNatPmpRespPublicIpStr" /tmp/natpmpc_allowed | cut -d ':' -f 2 | xargs)
+	testNatPmpAllowed="$(echo "$natpmpcAllowed" | grep -E "$readNatPmpRespSuccessRegex")"
+	natPmpPublicIp="$(echo "$natpmpcAllowed" | grep "$readNatPmpRespPublicIpStr" | cut -d ':' -f 2 | xargs)"
 	echo "Public IP (natpmp): $natPmpPublicIp"
 	#### if the gateway allows port forwarding then request ports
 	# if not allowed or test error then warn user and reduce wait time
@@ -88,7 +88,7 @@ while true; do
 	then
 		echo 'NAT PMP test failed. Make sure your chosen server is P2P enabled. Make sure this containers traffic is routed through the VPN tunnel. Command output:'
 		echo "$cmdOutputDivider"
-		cat /tmp/natpmpc_allowed
+		echo "$natpmpcAllowed"
 		echo "$cmdOutputDivider"
 		scriptWaitTime=10
 	#### if allowed then request port fowarding for UDP/TCP for 60 second lifetime
@@ -98,20 +98,20 @@ while true; do
 		then
 			echo 'Sending UDP port forward request...'
 		fi
-		natpmpc -a 1 0 udp 60 -g "$protonGwIp" &> /tmp/natpmpc_udp_output
+		natpmpc_udp_output="$(natpmpc -a 1 0 udp 60 -g "$protonGwIp" 2>&1)"
 		# grab the read response/retry lines
-		testUdpPortMap=$(grep -E "$readNatPmpRespSuccessRegex" /tmp/natpmpc_udp_output)
+		testUdpPortMap="$(echo "$natpmpc_udp_output" | grep -E "$readNatPmpRespSuccessRegex")"
 		# if test failed then warn user and reduce wait time
 		if [[ -z "$testUdpPortMap" ]]
 		then
 			echo 'UDP port mapping failed. Command output:'
 			echo "$cmdOutputDivider"
-			cat /tmp/natpmpc_udp_output
+			echo "$natpmpc_udp_output"
 			echo "$cmdOutputDivider"
 			scriptWaitTime=10
 		# if mapping was successful then display port
 		else
-			mappedUdpPort=$(grep -E "$readNatPmpPortMapRespRegex" /tmp/natpmpc_udp_output | awk '{print $4}')
+			mappedUdpPort="$(echo "$natpmpc_udp_output" | grep -E "$readNatPmpPortMapRespRegex" | awk '{print $4}')"
 			echo "Forwarded port (UDP): $mappedUdpPort"
 		fi
 		#### TCP port forward request
@@ -119,20 +119,20 @@ while true; do
 		then
 			echo 'Sending TCP port forward request...'
 		fi
-		natpmpc -a 1 0 tcp 60 -g "$protonGwIp" &> /tmp/natpmpc_tcp_output
+		natpmpc_tcp_output="$(natpmpc -a 1 0 tcp 60 -g "$protonGwIp" 2>&1)"
 		# grab the read response/retry lines
-		testTcpPortMap=$(grep -E "$readNatPmpRespSuccessRegex" /tmp/natpmpc_tcp_output)
+		testTcpPortMap="$(echo "$natpmpc_tcp_output" | grep -E "$readNatPmpRespSuccessRegex")"
 		# if test failed then warn user and reduce wait time
 		if [[ -z "$testTcpPortMap" ]]
 		then
 			echo 'TCP port mapping failed. Command output:'
 			echo "$cmdOutputDivider"
-			cat /tmp/natpmpc_tcp_output
+			echo "$natpmpc_tcp_output"
 			echo "$cmdOutputDivider"
 			scriptWaitTime=10
 		# if mapping was successful then display port
 		else
-			mappedTcpPort=$(grep -E "$readNatPmpPortMapRespRegex" /tmp/natpmpc_tcp_output | awk '{print $4}')
+			mappedTcpPort="$(echo "$natpmpc_tcp_output" | grep -E "$readNatPmpPortMapRespRegex" | awk '{print $4}')"
 			echo "Forwarded port (TCP): $mappedTcpPort"
 		fi
 	fi
