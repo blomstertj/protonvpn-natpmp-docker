@@ -1,8 +1,8 @@
 # source image - alpine hardened (dev means it has "apk" package manager)
-FROM dhi.io/alpine-base:3.23-dev
+FROM dhi.io/alpine-base:3.24-dev
 
 # set labels
-LABEL build_version='2026.05.19'
+LABEL build_version='2026.10.17'
 LABEL maintainer='blomstertj'
 
 # set environment variables
@@ -10,16 +10,21 @@ ENV COMPACT_OUTPUT='false'
 ENV SKIP_IPME_CHECK='false'
 ENV TZ='UTC'
 
-# install bash, curl, and libnatpmp
-RUN echo "**** install packages ****" && \
-    apk add --no-cache bash curl libnatpmp tzdata
+# enable community repository for natpmpc package
+RUN echo '**** enable community repository ****' && \
+    echo 'https://dl-cdn.alpinelinux.org/alpine/v3.24/community' >> /etc/apk/repositories
 
-RUN echo "**** set timezone ****" && \
+# install bash, curl, and libnatpmp
+RUN echo '**** install packages ****' && \
+    apk update && \
+    apk add --no-cache tzdata bash curl libnatpmp
+
+RUN echo '**** set timezone ****' && \
     cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
     echo "${TZ}" > /etc/timezone
 
 # clean up container /tmp, /var/log, and /var/cache/apk
-RUN echo "**** cleanup ****" && \
+RUN echo '**** cleanup ****' && \
     rm -rf /tmp/* && \
     rm -rf /var/log/* && \
     rm -rf /var/cache/apk/*
@@ -28,7 +33,7 @@ RUN echo "**** cleanup ****" && \
 COPY proton-natpmp-keepalive.sh /
 
 # copy entrypoint script to container / dir
-RUN echo "**** set ownership and permissions ****" && \
+RUN echo '**** set ownership and permissions ****' && \
     chown nonroot:nonroot /proton-natpmp-keepalive.sh && \
     chmod +x /proton-natpmp-keepalive.sh
 
