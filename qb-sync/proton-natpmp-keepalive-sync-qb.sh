@@ -149,9 +149,10 @@ while true; do
 			echo "Forwarded port (TCP): $mappedTcpPort"
 		fi
 	fi
-	#### if qBittorrent API key and WebUI URL are set then update the listen port to match the mapped TCP port
+	#### if qBittorrent API key and WebUI URL are set then get the current listen port and update if needed
 	if [[ $updateQbittorrentPort == true ]]
 	then
+		#### get the current qBittorrent preferences via API request
 		if [[ $verbose == true ]]
 		then
 			echo "Get the current qBittorrent preferences"
@@ -163,13 +164,13 @@ while true; do
 			echo "$cmdOutputDivider"
     		echo "Error: Failed to get qBittorrent preferences. Please check your API key and WebUI URL."
     		echo "$cmdOutputDivider"
-		# if the GET request was successful then check if the listen port matches the mapped TCP port
+		#### parse the qBittorrent preferences JSON response to get the current listen port
 		else
 			if [[ $verbose == true ]]
 			then
 				echo "Getting the current qBittorrent listen port"
 			fi
-			# parse the JSON response to get the current listen port
+			# parse json response to get the current listen port
 			qbListenPort="$(echo "$getQbPreferencesApiRequest" | jq -r '.listen_port')"
 			# if parsing the JSON response failed then warn user
 			if [[ -z "$qbListenPort" ]]
@@ -177,18 +178,18 @@ while true; do
 				echo "$cmdOutputDivider"
 				echo "Error: Failed to retrieve the current port from qBittorrent preferences."
 				echo "$cmdOutputDivider"
-			#### if parsing the JSON response was successful then check if the listen port matches the mapped TCP port
+			#### if parsing did not fail then set the qBittorrent listen port
 			else
-				# if preference parsing was successful then display current listen port
+				# display the current listen port
 				echo "Current qBittorrent listen port (TCP): $qbListenPort"
-				# if the current listen port does not match the mapped TCP
+				# if the current listen port does not match the mapped TCP port
 				if [[ "$qbListenPort" != "$mappedTcpPort" ]]
 				then
 					if [[ $verbose == true ]]
 					then
 						echo "Updating qBittorrent listen port to match mapped TCP port: $mappedTcpPort"
 					fi
-					# update qBittorrent listen port to match mapped TCP port
+					# set the qBittorrent listen port via API request
 					setQbPreferencesApiRequest="$(curl -s -X POST "$qbittorrentWebUiUrl/api/v2/app/setPreferences" -H "Authorization: Bearer $qbittorrentApiKey" --data-urlencode "json={\"listen_port\":$mappedTcpPort,\"random_port\":false,\"upnp\":false}" 2>&1)"
 					# if the POST request failed then warn user
 					if [[ $? -ne 0 ]]
@@ -200,7 +201,7 @@ while true; do
 					else
 						echo "Updated qBittorrent listen port (TCP): $mappedTcpPort"
 					fi
-				# if the current listen port matches the mapped TCP port then display port match message
+				#### if ports match then do nothing
 				else
 					if [[ $verbose == true ]]
 					then
