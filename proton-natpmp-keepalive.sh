@@ -65,7 +65,7 @@ while true; do
 	then
 		# this should always match what natpmp returns
 		# should only be different if we're not connected to VPN
-		curlPublicIp="$(curl --silent ip.me)"
+		curlPublicIp="$(curl -s ip.me)"
 		echo "Public IP (ip.me): $curlPublicIp"
 	fi
 	#### test if the gateway allows port forwarding

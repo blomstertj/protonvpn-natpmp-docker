@@ -78,7 +78,7 @@ while true; do
 	then
 		# this should always match what natpmp returns
 		# should only be different if we're not connected to VPN
-		curlPublicIp="$(curl --silent ip.me)"
+		curlPublicIp="$(curl -s ip.me)"
 		echo "Public IP (ip.me): $curlPublicIp"
 	fi
 	#### test if the gateway allows port forwarding
@@ -157,7 +157,7 @@ while true; do
 			echo "Get the current qBittorrent preferences"
 		fi
 		getQbPreferencesApiRequest="$(curl -s -X GET "$qbittorrentWebUiUrl/api/v2/app/preferences" -H "Authorization: Bearer $qbittorrentApiKey" 2>&1)"
-		# if the GET request failed then warn user and show curl output for debugging
+		# if the GET request failed then warn user
 		if [[ $? -ne 0 ]]
 		then
 			echo "$cmdOutputDivider"
@@ -171,7 +171,7 @@ while true; do
 			fi
 			# parse the JSON response to get the current listen port
 			qbListenPort="$(echo "$getQbPreferencesApiRequest" | jq -r '.listen_port')"
-			# if parsing the JSON response failed then warn user and show curl output for debugging
+			# if parsing the JSON response failed then warn user
 			if [[ -z "$qbListenPort" ]]
 			then
 				echo "$cmdOutputDivider"
@@ -190,7 +190,7 @@ while true; do
 					fi
 					# update qBittorrent listen port to match mapped TCP port
 					setQbPreferencesApiRequest="$(curl -s -X POST "$qbittorrentWebUiUrl/api/v2/app/setPreferences" -H "Authorization: Bearer $qbittorrentApiKey" --data-urlencode "json={\"listen_port\":$mappedTcpPort,\"random_port\":false,\"upnp\":false}" 2>&1)"
-					# if the POST request failed then warn user and show curl output for debugging
+					# if the POST request failed then warn user
 					if [[ $? -ne 0 ]]
 					then
 						echo "$cmdOutputDivider"
