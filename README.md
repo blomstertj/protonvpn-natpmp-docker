@@ -29,7 +29,7 @@ Runs the NATPMP loop from the ProtonVPN manual port forward guide in a nice scri
     - relies on an external device/service/container to direct the traffic through VPN
         - Routers and firewalls can send traffic from specific IP addresses and/or MAC addresses through the VPN
 
-The purpose of the container is to spit out the port numbers to put in your other applications like a BitTorrent client. You don't need to run natpmpc on the same device, the ports will work for all devices that use the VPN. I'm working on a separate version with a different tag to update qBittorrent torrent port via API.
+The purpose of the container is to spit out the port numbers to put in your other applications like a BitTorrent client. You don't need to run natpmpc on the same device, the ports will work for all devices that use the VPN. If you are using the *-qbsync tags then the container can set the port number in qBittorrent via API automatically.
 
 
 How I use it
