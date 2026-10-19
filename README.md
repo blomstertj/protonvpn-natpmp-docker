@@ -30,7 +30,7 @@ Runs the NATPMP loop from the ProtonVPN manual port forward guide in a nice scri
 
 - This "microservice" container is:
     - lightweight and secure (based on Alpine Docker hardened image and uses nonroot user)
-    - uses basic Linux tools (bash, curl, and libnatpmp)
+    - uses basic Linux tools (bash, curl, libnatpmp, and optionally jq for qBittorrent sync tags)
     - relies on an external device/service/container to direct the traffic through VPN
         - Routers and firewalls can send traffic from specific IP addresses and/or MAC addresses through the VPN
 
