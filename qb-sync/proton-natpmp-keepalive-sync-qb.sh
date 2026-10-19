@@ -29,14 +29,16 @@ cmdOutputDivider='================================================'
 # divider between loop iterations
 outputDivider='================================================================================================'
 # api key for qBittorrent WebUI
-qbittorrentApiKey="$(printenv QBITTORRENT_API_KEY)"
+qBittorrentApiKey="$(printenv QBITTORRENT_API_KEY)"
 # qBittorrent WebUI URL
-qbittorrentWebUiUrl="$(printenv QBITTORRENT_WEBUI_URL)"
-if [[ -z "$qbittorrentApiKey" || -z "$qbittorrentWebUiUrl" ]]
+qBittorrentWebUiUrl="$(printenv QBITTORRENT_WEBUI_URL)"
+if [[ -z "$qBittorrentApiKey" || -z "$qBittorrentWebUiUrl" ]]
 then
-	updateQbittorrentPort=false
+	updateQBPort=false
 else
-	updateQbittorrentPort=true
+	updateQBPort=true
+	qBittorrentWebUiGetEndpoint="${qBittorrentWebUiUrl%/}/api/v2/app/preferences"
+	qBittorrentWebUiSetEndpoint="${qBittorrentWebUiUrl%/}/api/v2/app/setPreferences"
 fi
 # verbose output
 checkCompactOutputEnv="$(printenv COMPACT_OUTPUT)"
@@ -69,7 +71,7 @@ while true; do
 	testTcpPortMap=''
 	mappedTcpPort=''
 	getQbPreferencesApiRequest=''
-	qblistenPort=''
+	qBListenPort=''
 	setQbPreferencesApiRequest=''
 	scriptWaitTime=45
 	
@@ -150,72 +152,121 @@ while true; do
 		fi
 	fi
 	#### if qBittorrent API key and WebUI URL are set then get the current listen port and update if needed
-	if [[ $updateQbittorrentPort == true ]]
+	if [[ $updateQBPort == true ]]
 	then
+		echo "$outputDivider"
 		#### get the current qBittorrent preferences via API request
 		if [[ $verbose == true ]]
 		then
-			echo "Get the current qBittorrent preferences"
+			echo "Get the current qBittorrent preferences from $qBittorrentWebUiGetEndpoint"
 		fi
-		getQbPreferencesApiRequest="$(curl -s -X GET "$qbittorrentWebUiUrl/api/v2/app/preferences" -H "Authorization: Bearer $qbittorrentApiKey" 2>&1)"
+		getQbPreferencesApiRequest="$(curl -s -X GET "$qBittorrentWebUiGetEndpoint" -H "Authorization: Bearer $qBittorrentApiKey" 2>&1)"
 		# if the GET request failed then warn user
 		if [[ $? -ne 0 ]]
 		then
 			echo "$cmdOutputDivider"
-    		echo "Error: Failed to get qBittorrent preferences. Please check your API key and WebUI URL."
+    		echo "Error: Failed to get qBittorrent preferences from $qBittorrentWebUiGetEndpoint."
+			echo "Please check your API key and WebUI URL."
     		echo "$cmdOutputDivider"
 		#### parse the qBittorrent preferences JSON response to get the current listen port
 		else
 			if [[ $verbose == true ]]
 			then
-				echo "Getting the current qBittorrent listen port"
+				echo "Getting the current qBittorrent listen port from the preferences JSON response"
 			fi
 			# parse json response to get the current listen port
-			qbListenPort="$(echo "$getQbPreferencesApiRequest" | jq -r '.listen_port')"
+			qBListenPort="$(echo "$getQbPreferencesApiRequest" | jq -r '.listen_port')"
 			# if parsing the JSON response failed then warn user
-			if [[ -z "$qbListenPort" ]]
+			if [[ -z "$qBListenPort" ]]
 			then
 				echo "$cmdOutputDivider"
-				echo "Error: Failed to retrieve the current port from qBittorrent preferences."
+				echo "Error: Failed to retrieve the current port from qBittorrent preferences from $qBittorrentWebUiGetEndpoint."
+				echo "Please check your API key and WebUI URL."
+				echo "Command output:"
+				echo "$getQbPreferencesApiRequest"
 				echo "$cmdOutputDivider"
 			#### if parsing did not fail then set the qBittorrent listen port
 			else
 				# display the current listen port
-				echo "Current qBittorrent listen port (TCP): $qbListenPort"
+				echo "Current qBittorrent listen port (TCP): $qBListenPort"
 				# if the current listen port does not match the mapped TCP port
-				if [[ "$qbListenPort" != "$mappedTcpPort" ]]
+				if [[ "$qBListenPort" != "$mappedTcpPort" ]]
 				then
 					if [[ $verbose == true ]]
 					then
-						echo "Updating qBittorrent listen port to match mapped TCP port: $mappedTcpPort"
+						echo "Updating qBittorrent at $qBittorrentWebUiSetEndpoint listen port to match mapped TCP port: $mappedTcpPort"
+						echo "JSON request body: listen_port=$mappedTcpPort, random_port=false, upnp=false"
 					fi
 					# set the qBittorrent listen port via API request
-					setQbPreferencesApiRequest="$(curl -s -X POST "$qbittorrentWebUiUrl/api/v2/app/setPreferences" -H "Authorization: Bearer $qbittorrentApiKey" --data-urlencode "json={\"listen_port\":$mappedTcpPort,\"random_port\":false,\"upnp\":false}" 2>&1)"
+					setQbPreferencesApiRequest="$(curl -s -X POST "$qBittorrentWebUiSetEndpoint" -H "Authorization: Bearer $qBittorrentApiKey" --data-urlencode "json={\"listen_port\":$mappedTcpPort,\"random_port\":false,\"upnp\":false}" 2>&1)"
 					# if the POST request failed then warn user
 					if [[ $? -ne 0 ]]
 					then
 						echo "$cmdOutputDivider"
-						echo "Error: Failed to update qBittorrent listen port. Please check your API key and WebUI URL."
+						echo "Error: Failed to update qBittorrent listen port at $qBittorrentWebUiSetEndpoint."
+						echo "Please check your API key and WebUI URL."
 						echo "$cmdOutputDivider"
-					# if the POST request was successful then display update message
+					# if the POST request was successful then check preferences again to confirm the listen port was updated
 					else
-						echo "Updated qBittorrent listen port (TCP): $mappedTcpPort"
+						# refresh preferences to confirm the listen port was updated
+						if [[ $verbose == true ]]
+						then
+							echo "Refreshing qBittorrent preferences to confirm the listen port was updated"
+						fi
+						getQbPreferencesApiRequest="$(curl -s -X GET "$qBittorrentWebUiGetEndpoint" -H "Authorization: Bearer $qBittorrentApiKey" 2>&1)"
+						if [[ $? -ne 0 ]]
+						then
+							echo "$cmdOutputDivider"
+							echo "Error: Failed to get qBittorrent preferences from $qBittorrentWebUiGetEndpoint after updating listen port."
+							echo "Please check your API key and WebUI URL."
+							echo "$cmdOutputDivider"
+						#### parse the qBittorrent preferences JSON response to get the current listen port
+						else
+						if [[ $verbose == true ]]
+						then
+							echo "Getting the current qBittorrent listen port from the preferences JSON response"
+						fi
+						# parse json response to get the current listen port
+						qBListenPort="$(echo "$getQbPreferencesApiRequest" | jq -r '.listen_port')"
+						# if parsing the JSON response failed then warn user
+						if [[ -z "$qBListenPort" ]]
+						then
+							echo "$cmdOutputDivider"
+							echo "Error: Failed to retrieve the current port from qBittorrent preferences from $qBittorrentWebUiGetEndpoint."
+							echo "Please check your API key and WebUI URL."
+							echo "Command output:"
+							echo "$getQbPreferencesApiRequest"
+							echo "$cmdOutputDivider"
+						#### if parsing did not fail then set the qBittorrent listen port
+						else
+							# if the current listen port does not match the mapped TCP port
+							if [[ "$qBListenPort" != "$mappedTcpPort" ]]
+							then
+								echo "$cmdOutputDivider"
+								echo "Error: Failed to update qBittorrent listen port to match mapped TCP port: $mappedTcpPort"
+								echo "$cmdOutputDivider"
+							else 
+								echo "Updated qBittorrent listen port (TCP): $qBListenPort"
+							fi
+						fi
 					fi
+				fi
 				#### if ports match then do nothing
 				else
 					if [[ $verbose == true ]]
 					then
-						echo "qBittorrent listen port already matches the mapped TCP port: $mappedTcpPort"
+						echo "qBittorrent listen port $qBListenPort already matches the mapped TCP port: $mappedTcpPort"
 					fi
 				fi
 			fi
 		fi
 	fi
+	echo "$outputDivider"
 	#### loop complete
 	# delay next iteration by 10 or 45 seconds
 	if [[ $verbose == true ]]
 	then
-		echo "Waiting $scriptWaitTime seconds before next port forward request..."
+		echo "Loop complete. Waiting $scriptWaitTime seconds before next port forward request..."
 	fi
 	echo "$outputDivider"
 	sleep $scriptWaitTime
