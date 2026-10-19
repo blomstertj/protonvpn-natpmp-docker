@@ -29,7 +29,7 @@ cmdOutputDivider='================================================'
 # divider between loop iterations
 outputDivider='================================================================================================'
 # verbose output
-checkCompactOutputEnv=$(printenv COMPACT_OUTPUT)
+checkCompactOutputEnv="$(printenv COMPACT_OUTPUT)"
 if [[ $checkCompactOutputEnv == 'true' ]]
 then
 	verbose=false
@@ -37,7 +37,7 @@ else
 	verbose=true
 fi
 # skip ip.me check
-checkSkipIpMeEnv=$(printenv SKIP_IPME_CHECK)
+checkSkipIpMeEnv="$(printenv SKIP_IPME_CHECK)"
 if [[ $checkSkipIpMeEnv == 'true' ]]
 then
 	skipIpMeCheck=true
