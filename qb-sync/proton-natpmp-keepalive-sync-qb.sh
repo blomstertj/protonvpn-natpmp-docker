@@ -4,7 +4,7 @@
 #### Author
 # github.com/blomstertj
 #### Description
-# natpmpc port forward map request loop
+# natpmpc port forward map request loop with qBittorrent listen port update via API
 #
 # based on Proton's support article here: https://protonvpn.com/support/port-forwarding-manual-setup#linux
 # original command line from article: 
