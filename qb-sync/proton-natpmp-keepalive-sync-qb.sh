@@ -180,7 +180,7 @@ while true; do
 			#### if parsing the JSON response was successful then check if the listen port matches the mapped TCP port
 			else
 				# if preference parsing was successful then display current listen port
-				echo "qBittorrent listen port (TCP): $qbListenPort"
+				echo "Current qBittorrent listen port (TCP): $qbListenPort"
 				# if the current listen port does not match the mapped TCP
 				if [[ "$qbListenPort" != "$mappedTcpPort" ]]
 				then
@@ -198,7 +198,7 @@ while true; do
 						echo "$cmdOutputDivider"
 					# if the POST request was successful then display update message
 					else
-						echo "Updated qBittorrent listen port to: $mappedTcpPort"
+						echo "Updated qBittorrent listen port (TCP): $mappedTcpPort"
 					fi
 				# if the current listen port matches the mapped TCP port then display port match message
 				else
