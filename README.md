@@ -1,5 +1,10 @@
 Changelog
 ===
+- v2026.10.19 - latest-qbsync/dev-qbsync
+    - Added re-checking qBittorrent preferences after submitting the port update API payload to confirm port was actually updated
+    - Trim trailing slash on web URL if present when forming API endpoint URL
+    - Added more verbose console messages
+    - Tweaked comments
 - v2026.10.18 - latest-qbsync/dev-qbsync
     - Added updating qBittorrent connection port via API
 - v2026.10.17 - latest/dev
