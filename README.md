@@ -1,3 +1,12 @@
+Thank you for all the pulls! I'm new to docker and bash still so thank you for the support
+
+Upcoming
+===
+- Create functions and clean up script code
+- Create heathcheck of some sorts
+- Add multi-instance support via optional "app id" env var (will actually be the "internal" port number on the Proton side - inspired by https://github.com/josemzr/protonvpn-natpmp-docker
+- merge tags and scripts in a better way
+
 Changelog
 ===
 - v2026.10.19 - latest-qbsync/dev-qbsync
@@ -10,6 +19,9 @@ Changelog
 - v2026.10.17 - latest/dev
     - Changed to saving the natpmpc output to script variables instead of files in /tmp (reduces disk usage)
     - Updated to hardened Alpine 3.24-dev
+        - I had to inject the community repository since 3.23. I assume the Hardened Image team decided to only include the core repos. Source: https://wiki.alpinelinux.org/wiki/Repositories#Enabling_the_community_repository
+        - For security, https is used: https://dl-cdn.alpinelinux.org/alpine/v3.24/community
+        - As a reminder, the container user is changed to "nonroot" post package install so you cannot install packages
 
 Tags
 ===
