@@ -19,6 +19,7 @@ Changelog
 - v2026.10.17 - latest/dev
     - Changed to saving the natpmpc output to script variables instead of files in /tmp (reduces disk usage)
     - Updated to hardened Alpine 3.24-dev
+        - https://hub.docker.com/hardened-images/catalog/dhi/alpine-base
         - I had to inject the community repository since 3.23. I assume the Hardened Image team decided to only include the core repos. Source: https://wiki.alpinelinux.org/wiki/Repositories#Enabling_the_community_repository
         - For security, https is used: https://dl-cdn.alpinelinux.org/alpine/v3.24/community
         - As a reminder, the container user is changed to "nonroot" post package install so you cannot install packages
