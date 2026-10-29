@@ -3,7 +3,6 @@ Thank you for all the pulls! I'm new to docker and bash still so thank you for t
 Upcoming
 ===
 - Create heathcheck of some sorts
-- Add multi-instance support via optional "app id" env var (will actually be the "internal" port number on the Proton side - inspired by https://github.com/josemzr/protonvpn-natpmp-docker
 
 Changelog
 ===
