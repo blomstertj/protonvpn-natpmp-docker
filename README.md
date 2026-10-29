@@ -2,13 +2,15 @@ Thank you for all the pulls! I'm new to docker and bash still so thank you for t
 
 Upcoming
 ===
-- Create functions and clean up script code
 - Create heathcheck of some sorts
 - Add multi-instance support via optional "app id" env var (will actually be the "internal" port number on the Proton side - inspired by https://github.com/josemzr/protonvpn-natpmp-docker
-- merge tags and scripts in a better way
 
 Changelog
 ===
+- v2026.10.28 - latest/dev
+    - Merged normal version and qbsync versions. qBittorrent script code only executes if both environment variables for it are filled in. Otherwise it's skipped
+    - Complete script rework
+    - Removed *-qbsync tags
 - v2026.10.19 - latest-qbsync/dev-qbsync
     - Added re-checking qBittorrent preferences after submitting the port update API payload to confirm port was actually updated
     - Trim trailing slash on web URL if present when forming API endpoint URL
