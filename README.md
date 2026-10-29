@@ -106,7 +106,7 @@ services:
       - "QBITTORRENT_API_KEY=abc123"
       - "QBITTORRENT_WEBUI_URL=http://qbittorrent:8080"
     hostname: "protonvpn-natpmp-qbsync"
-    image: "blomstertj/protonvpn-natpmp:latest-qbsync"
+    image: "blomstertj/protonvpn-natpmp:latest"
     mac_address: "92:ec:7c:a2:69:fd"
     networks:
       bond0-macvlan:
