@@ -28,9 +28,9 @@ Changelog
 Tags
 ===
 - latest
-    - latest stable version without qBittorrent port sync
+    - latest stable version with qBittorrent port sync
 - dev
-    - testing version without qBittorrent port sync
+    - testing version with qBittorrent port sync
 
 Description
 ===
@@ -40,11 +40,11 @@ Runs the NATPMP loop from the ProtonVPN manual port forward guide in a nice scri
 
 - This "microservice" container is:
     - lightweight and secure (based on Alpine Docker hardened image and uses nonroot user)
-    - uses basic Linux tools (bash, curl, libnatpmp, and optionally jq for qBittorrent sync tags)
+    - uses basic Linux tools (bash, curl, libnatpmp, and jq)
     - relies on an external device/service/container to direct the traffic through VPN
         - Routers and firewalls can send traffic from specific IP addresses and/or MAC addresses through the VPN
 
-The purpose of the container is to spit out the port numbers to put in your other applications like a BitTorrent client. You don't need to run natpmpc on the same device, the ports will work for all devices that use the VPN. If you are using the *-qbsync tags then the container can set the port number in qBittorrent via API automatically.
+The purpose of the container is to spit out the port numbers to put in your other applications like a BitTorrent client. You don't need to run natpmpc on the same device, the ports will work for all devices that use the VPN. Fill in your qBittorrent API key and the web UI URL then the container can set the port number in qBittorrent via API automatically.
 
 
 How I use it
