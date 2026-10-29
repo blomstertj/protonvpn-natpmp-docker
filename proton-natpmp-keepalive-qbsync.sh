@@ -298,7 +298,6 @@ main() {
 			# if the GET request failed then warn user
             if ! qb_preferences="$(qbit_get_preferences)"; then
                 log_error "Failed to get qBittorrent preferences. Please check API key and WebUI URL"
-                wait_time="$FAILURE_WAIT_TIME"
 			
 			## parse the qBittorrent preferences JSON response to get the current listen port
             else
@@ -307,7 +306,6 @@ main() {
 				# if parsing the JSON response failed then warn user
 				if [[ -z "$qb_current_listen_port" ]]; then
 					log_error "Failed to extract listen_port from qBittorrent preferences response. Current qBittorrent preferences:" "qb_preferences"
-					wait_time="$FAILURE_WAIT_TIME"
 					
 				## if parsing did not fail then set the qBittorrent listen port
 				else
@@ -320,7 +318,6 @@ main() {
 						# if the POST request failed then warn user
 						if ! qbit_update_preferences "$proton_mapped_tcp_port"; then
 							log_error "Failed to update qBittorrent listen port via API"
-							wait_time="$FAILURE_WAIT_TIME"
 						# if the POST request was successful then check preferences again to confirm the listen port was updated
 						else
 							# verify the listen port was updated
@@ -328,7 +325,6 @@ main() {
 							# if parsing the JSON response failed then warn user
 							if ! qb_verified_listen_port="$(qbit_verify_update "$proton_mapped_tcp_port")"; then
 								log_error "Failed to verify qBittorrent listen port update. Expected: $proton_mapped_tcp_port."
-								wait_time="$FAILURE_WAIT_TIME"
 							# display the updated listen port
 							else
 								log_success "Updated qBittorrent listen port (TCP): $qb_verified_listen_port"
