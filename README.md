@@ -31,10 +31,6 @@ Tags
     - latest stable version without qBittorrent port sync
 - dev
     - testing version without qBittorrent port sync
-- latest-qbsync
-    - latest stable version with qBittorrent port sync
-- dev-qbsync
-    - testing version with qBittorrent port sync
 
 Description
 ===
