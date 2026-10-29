@@ -16,14 +16,15 @@
 # 2026.10.28
 #
 ## Steps
-# 1. pipes all output to variables and uses grep/awk to parse
-# 2. shows on console the public IP from ip.me, the public IP from natpmp, and the mapped ports if successful
-# 3. if syncing qBittorrent is enabled:
+# 1. parses environment variables
+# 2. Test if the VPN gateway supports port forwarding (Proton uses 10.2.0.1)
+# 3. If port forwarding support is present, request port forwarding for UDP/TCP and output to console
+# 4. if syncing qBittorrent is enabled:
 # 		a. checks current listen port via API
 #		b. compares listen port to mapped port from natpmp (tcp)
 #		c. if needed, sets the listen port via API to match natpmp (tcp)
 #		d. verifies the new port matches natpmp (tcp)
-# 4. if any step fails then the script will output the command output for debugging and reduce loop wait time
+# 5. if any step fails then the script will output the command output for debugging and reduce loop wait time
 ##############################################################################
 
 ##############################################################################
