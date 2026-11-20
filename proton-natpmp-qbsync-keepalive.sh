@@ -471,7 +471,7 @@ main() {
                     wait_time="$FAILURE_WAIT_TIME"
                 # if fetching the preferences succeeds then log success with verified listen port
                 else
-                    log_success "Verified qBittorrent listen port (TCP): $qb_verified_listen_port"
+                    log_success "Updated qBittorrent listen port (TCP): $qb_verified_listen_port"
                 fi
             fi
         fi
