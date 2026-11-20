@@ -4,8 +4,8 @@ FROM dhi.io/alpine-base:3.24-dev
 # set labels
 LABEL maintainer='github.com/blomstertj'
 LABEL description='NATPMP port forward loop script for ProtonVPN P2P connections with optional qBittorrent sync'
-LABEL build_version='2026.10.28'
-LABEL script_version='2026.10.28'
+LABEL build_version='2026.11.20'
+LABEL script_version='2026.11.20'
 
 # set environment variables
 ENV COMPACT_OUTPUT='false'
