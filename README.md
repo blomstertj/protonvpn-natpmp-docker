@@ -118,15 +118,15 @@ networks:
 Example console output
 ===
 <br>
-<img alt="Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/main/console-output-example.png">
+<img alt="Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/dev/console-output-example.png">
 
 
 Example compact console output
 ===
-<img alt="Compact Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/main/compact-console-output-example.png">
+<img alt="Compact Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/dev/compact-console-output-example.png">
 
 
 Example console error output
 ===
 <br>
-<img alt="Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/main/console-output-error-example.png">
+<img alt="Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/dev/console-output-error-example.png">
