@@ -120,6 +120,10 @@ Example console output
 <br>
 <img alt="Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/dev/console-output-example.png">
 
+Example console output
+===
+<br>
+<img alt="Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/dev/console-output-example2.png">
 
 Example compact console output
 ===
