@@ -30,12 +30,15 @@ RUN echo '**** set timezone ****' && \
     echo "${TZ}" > /etc/timezone
 
 # copy bash script to container / dir
-COPY proton-natpmp-keepalive-qbsync.sh /
+RUN echo '**** copy bash script to container ****' && \
+    mkdir -p /config && \
+    chown nonroot:nonroot /config
+COPY proton-natpmp-qbsync-keepalive.sh /config/proton-natpmp-qbsync-keepalive.sh
 
 # set ownership and permissions (nonroot user from hardened alpine image)
 RUN echo '**** set ownership and permissions ****' && \
-    chown nonroot:nonroot /proton-natpmp-keepalive-qbsync.sh && \
-    chmod +x /proton-natpmp-keepalive-qbsync.sh
+    chown nonroot:nonroot /config/proton-natpmp-qbsync-keepalive.sh && \
+    chmod +x /config/proton-natpmp-qbsync-keepalive.sh
 
 # clean up container /tmp, /var/log, and /var/cache/apk
 RUN echo '**** cleanup ****' && \
@@ -48,4 +51,4 @@ USER nonroot
 
 # create startup command
 ENTRYPOINT [ "/bin/bash" ]
-CMD [ "/proton-natpmp-keepalive-qbsync.sh" ]
+CMD [ "/config/proton-natpmp-qbsync-keepalive.sh" ]
