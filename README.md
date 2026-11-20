@@ -120,15 +120,13 @@ Example console output
 <br>
 <img alt="Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/main/console-output-example.png">
 
-Example console output
-===
-<br>
-<img alt="Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/main/console-output-example2.png">
-
 Example compact console output
 ===
 <img alt="Compact Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/main/compact-console-output-example.png">
 
+Example compact console output 2
+===
+<img alt="Compact Console Output Example" src="https://raw.githubusercontent.com/blomstertj/protonvpn-natpmp-docker/refs/heads/main/compact-console-output-example2.png">
 
 Example console error output
 ===
