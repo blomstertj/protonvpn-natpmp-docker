@@ -6,6 +6,9 @@ Upcoming
 
 Changelog
 ===
+- v2026.11.20 - dev
+    - Further bash script code cleanup
+    - Renamed script and changed script location to /config
 - v2026.10.28 - latest/dev
     - Merged normal version and qbsync versions. qBittorrent script code only executes if both environment variables for it are filled in. Otherwise it's skipped
     - Complete script rework
