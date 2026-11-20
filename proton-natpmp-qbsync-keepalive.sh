@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 ##############################################################################
 #### README
 ## Author
@@ -27,13 +28,10 @@
 # 5. if any step fails then the script will output the command output for debugging and reduce loop wait time
 ##############################################################################
 
-##############################################################################
-#### bash settings
-set -euo pipefail
-##############################################################################
 
-##############################################################################
-#### Configuration Constants
+## Configuration Constants
+# bash settings
+set -euo pipefail
 # the URL used to retrieve the public IP address
 readonly CURL_IP_URL='https://ip.me'
 # the PMP gateway for ProtonVPN from the article
@@ -57,8 +55,7 @@ readonly FAILURE_WAIT_TIME=10
 ##############################################################################
 
 ##############################################################################
-#### Environment Variable Parsing (called once at startup)
-## parse container environment variables
+## general functions
 parse_environment() {
     # Parse COMPACT_OUTPUT environment variable - convert string true/false to bool
     local compact_output_value
@@ -97,23 +94,19 @@ parse_environment() {
         QB_SET_ENDPOINT=''
     fi
 }
-##############################################################################
 
-##############################################################################
-#### Logging Functions
-## divide loop start/stop iterations
 log_section() {
     echo "$OUTPUT_DIVIDER"
 }
 
-## show additional informational messages to indicate where in the script the loop is better
+# show additional informational messages to indicate where in the script the loop is better
 log_subsection() {
     if [[ "$COMPACT_OUTPUT" == false ]]; then
         echo "[$1]"
     fi
 }
 
-## show error messages between a sub-divider
+# show error messages between a sub-divider
 log_error() {
 	local error_title
 	error_title="$1"
@@ -125,14 +118,11 @@ log_error() {
     echo "$CMD_OUTPUT_DIVIDER"
 }
 
-## show checkmark for successful operations
+# show checkmark for successful operations
 log_success() {
     echo "✓ $1"
 }
-##############################################################################
 
-##############################################################################
-#### general functions
 invoke_curl_ip_get_cmd() {
     local output
 	if output="$(curl -s "$CURL_IP_URL" 2>&1)"; then
@@ -154,9 +144,10 @@ parse_curl_ip_get_cmd_output() {
         return 1
     fi
 }
+##############################################################################
 
 ##############################################################################
-#### natpmp functions
+## natpmp functions
 parse_natpmp_cmd_success() {
     local input
     input="$1"
@@ -223,8 +214,8 @@ parse_port_forward_request_cmd_port() {
 ##############################################################################
 
 ##############################################################################
-#### qBittorrent API Functions (only called if QB_SYNC_ENABLED=true)
-## get the preferences
+## qBittorrent API Functions (only called if QB_SYNC_ENABLED=true)
+# get the preferences
 qbit_get_preferences_cmd() {
     local apiRequest
     if apiRequest="$(curl -s -X GET "$QB_GET_ENDPOINT" -H "Authorization: Bearer $QB_API_KEY_NORMALIZED" 2>&1)"; then
@@ -265,7 +256,7 @@ qbit_update_preferences_cmd() {
 ##############################################################################
 
 ##############################################################################
-#### Main Execution
+## Main Execution
 main() {
 	## Parse all environment variables once at startup  
     parse_environment
@@ -292,7 +283,6 @@ main() {
 		local qb_preferences=""
 		local qb_verified_listen_port=0
         local wait_time="$DEFAULT_WAIT_TIME"
-
         
         if [[ "$SKIP_IPME_CHECK" == false ]]; then
             ## get public IP from ip.me (SKIP_IPME_CHECK=false)
@@ -497,5 +487,9 @@ main() {
         sleep "$wait_time"
     done
 }
+##############################################################################
 
+##############################################################################
+## start the main function
 main "$@"
+##############################################################################
