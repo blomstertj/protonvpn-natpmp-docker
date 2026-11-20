@@ -6,7 +6,7 @@ Upcoming
 
 Changelog
 ===
-- v2026.11.20 - dev
+- v2026.11.20 - latest/dev
     - Further bash script code cleanup
     - Renamed script and changed script location to /config
 - v2026.10.28 - latest/dev
