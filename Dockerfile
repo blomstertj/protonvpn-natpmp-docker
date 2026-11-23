@@ -22,6 +22,7 @@ RUN echo '**** enable community repository ****' && \
 # install bash, libnatpmp, curl, jq, and tzdata
 RUN echo '**** install base packages ****' && \
     apk update && \
+    apk upgrade && \
     apk add --no-cache bash libnatpmp curl jq tzdata
 
 # set timezone
