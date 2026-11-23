@@ -26,7 +26,6 @@ Changelog
         - https://hub.docker.com/hardened-images/catalog/dhi/alpine-base
         - I had to inject the community repository since 3.23. I assume the Hardened Image team decided to only include the core repos. Source: https://wiki.alpinelinux.org/wiki/Repositories#Enabling_the_community_repository
         - For security, https is used: https://dl-cdn.alpinelinux.org/alpine/v3.24/community
-        - As a reminder, the container user is changed to "nonroot" post package install so you cannot install packages
 
 Tags
 ===
